@@ -1,6 +1,7 @@
 package app
 
 import (
+	"GoECommerce/models"
 	"fmt"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/postgres"
@@ -20,6 +21,7 @@ func New() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
+	_ = db.AutoMigrate(&models.User{})
 	return &App{
 		Router: mux.NewRouter(),
 		Db:     db,
