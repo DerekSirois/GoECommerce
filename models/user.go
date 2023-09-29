@@ -6,11 +6,13 @@ type User struct {
 	gorm.Model
 	Username string
 	Password []byte
+	IsAdmin  bool
 }
 
 type UserJson struct {
 	Username string
 	Password string
+	IsAdmin  bool
 }
 
 func (u *User) Create(db *gorm.DB) error {

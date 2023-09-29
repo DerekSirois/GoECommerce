@@ -14,13 +14,15 @@ type UserClaim struct {
 	jwt.RegisteredClaims
 	ID       int
 	UserName string
+	IsAdmin  bool
 }
 
-func CreateJWTToken(id int, name string) (string, error) {
+func CreateJWTToken(id int, name string, isAdmin bool) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, UserClaim{
 		RegisteredClaims: jwt.RegisteredClaims{ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 10))},
 		ID:               id,
 		UserName:         name,
+		IsAdmin:          isAdmin,
 	})
 
 	// Create the actual JWT token

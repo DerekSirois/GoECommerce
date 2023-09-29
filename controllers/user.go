@@ -28,7 +28,7 @@ func Login(db *gorm.DB) http.HandlerFunc {
 			utils.Respond(w, r, &utils.Response{Msg: "Wrong password or username"}, http.StatusUnauthorized)
 			return
 		}
-		token, err := auth.CreateJWTToken(int(u.ID), u.Username)
+		token, err := auth.CreateJWTToken(int(u.ID), u.Username, u.IsAdmin)
 		if err != nil {
 			utils.Respond(w, r, &utils.Response{Msg: err.Error()}, http.StatusInternalServerError)
 			return
@@ -57,6 +57,7 @@ func Register(db *gorm.DB) http.HandlerFunc {
 		u := &models.User{
 			Username: uJson.Username,
 			Password: hash,
+			IsAdmin:  uJson.IsAdmin,
 		}
 		err = u.Create(db)
 		if err != nil {
