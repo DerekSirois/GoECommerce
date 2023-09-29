@@ -45,6 +45,10 @@ func Register(db *gorm.DB) http.HandlerFunc {
 			utils.Respond(w, r, &utils.Response{Msg: err.Error()}, http.StatusBadRequest)
 			return
 		}
+		if uJson.Username == "" || uJson.Password == "" {
+			utils.Respond(w, r, &utils.Response{Msg: "Username and password are required"}, http.StatusBadRequest)
+			return
+		}
 		hash, err := HashPassword(uJson.Password)
 		if err != nil {
 			utils.Respond(w, r, &utils.Response{Msg: err.Error()}, http.StatusInternalServerError)
