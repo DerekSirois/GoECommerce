@@ -7,6 +7,7 @@ type User struct {
 	Username string
 	Password []byte
 	IsAdmin  bool
+	CartId   uint
 }
 
 type UserJson struct {

@@ -23,6 +23,7 @@ func New() (*App, error) {
 	}
 	_ = db.AutoMigrate(&models.User{})
 	_ = db.AutoMigrate(&models.Product{})
+	_ = db.AutoMigrate(&models.Cart{})
 	return &App{
 		Router: mux.NewRouter(),
 		Db:     db,
