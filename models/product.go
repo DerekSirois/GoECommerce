@@ -10,16 +10,16 @@ type Product struct {
 	Price       float32
 }
 
-func GetAllProduct(db *gorm.DB) ([]*Product, error) {
-	var p []*Product
-	result := db.Find(p)
-	return p, result.Error
+func GetAllProduct(db *gorm.DB) (*[]Product, error) {
+	var p []Product
+	result := db.Find(&p)
+	return &p, result.Error
 }
 
-func GetAllProductInStock(db *gorm.DB) ([]*Product, error) {
-	var p []*Product
-	result := db.Find(p, "quantity > 0")
-	return p, result.Error
+func GetAllProductInStock(db *gorm.DB) (*[]Product, error) {
+	var p []Product
+	result := db.Find(&p, "quantity > 0")
+	return &p, result.Error
 }
 
 func (p *Product) GetById(db *gorm.DB, id uint) error {
@@ -38,7 +38,7 @@ func (p *Product) Update(db *gorm.DB) error {
 	if err != nil {
 		return err
 	}
-	result := db.Model(pDb).Updates(p)
+	result := db.Model(pDb).Select("name", "description", "quantity", "price").Updates(p)
 	return result.Error
 }
 
