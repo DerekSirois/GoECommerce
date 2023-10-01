@@ -4,6 +4,12 @@ import "gorm.io/gorm"
 
 type Cart struct {
 	gorm.Model
-	User     User      `gorm:"foreignKey:ID"`
-	Products []Product `gorm:"many2many:cart_product;"`
+	Products []*Product `gorm:"many2many:cart_product;"`
+	UserID   uint
+}
+
+func NewCart() *Cart {
+	return &Cart{
+		Products: make([]*Product, 0),
+	}
 }

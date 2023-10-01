@@ -7,7 +7,7 @@ type User struct {
 	Username string
 	Password []byte
 	IsAdmin  bool
-	CartId   uint
+	Cart     Cart
 }
 
 type UserJson struct {
@@ -17,6 +17,7 @@ type UserJson struct {
 }
 
 func (u *User) Create(db *gorm.DB) error {
+	u.Cart = *NewCart()
 	result := db.Create(u)
 	return result.Error
 }
