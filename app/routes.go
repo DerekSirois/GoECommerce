@@ -13,6 +13,7 @@ func (a *App) Routes() {
 	a.Router.HandleFunc("/register", controllers.Register(a.Db)).Methods("POST")
 
 	a.ProductRoutes()
+	a.CartRoutes()
 }
 
 func (a *App) ProductRoutes() {
@@ -22,6 +23,11 @@ func (a *App) ProductRoutes() {
 	a.Router.HandleFunc("/api/product", auth.VerifyJWT(controllers.CreateProduct(a.Db), true)).Methods("POST")
 	a.Router.HandleFunc("/api/product/{id:[0-9]+}", auth.VerifyJWT(controllers.UpdateProduct(a.Db), true)).Methods("PUT")
 	a.Router.HandleFunc("/api/product/{id:[0-9]+}", auth.VerifyJWT(controllers.DeleteProduct(a.Db), true)).Methods("DELETE")
+}
+
+func (a *App) CartRoutes() {
+	a.Router.HandleFunc("/api/cart/{userId:[0-9]+}", auth.VerifyJWT(controllers.GetUserCart(a.Db), false)).Methods("GET")
+	a.Router.HandleFunc("/api/cart/{userId:[0-9]+}", auth.VerifyJWT(controllers.AddItemToCard(a.Db), false)).Methods("POST")
 }
 
 func index() http.HandlerFunc {
