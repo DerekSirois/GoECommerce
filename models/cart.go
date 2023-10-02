@@ -21,6 +21,6 @@ func NewCart() *Cart {
 
 func (u *User) AddToCart(db *gorm.DB, cartItem *CartItem) error {
 	u.Cart.CartItem = append(u.Cart.CartItem, cartItem)
-	err := u.Update(db)
+	err := u.UpdateCart(db)
 	return err
 }

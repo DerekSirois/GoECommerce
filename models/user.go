@@ -1,6 +1,8 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type User struct {
 	gorm.Model
@@ -28,16 +30,16 @@ func (u *User) GetByUsername(db *gorm.DB, username string) error {
 }
 
 func (u *User) GetById(db *gorm.DB, id uint) error {
-	result := db.First(u, "id = ?", id)
+	result := db.Preload("Cart.CartItem").First(u, "id = ?", id)
 	return result.Error
 }
 
-func (u *User) Update(db *gorm.DB) error {
+func (u *User) UpdateCart(db *gorm.DB) error {
 	uDb := &User{}
 	err := uDb.GetById(db, u.ID)
 	if err != nil {
 		return err
 	}
-	result := db.Model(uDb).Updates(u)
+	result := db.Preload("Cart.CartItem").Save(u)
 	return result.Error
 }
