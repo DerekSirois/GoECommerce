@@ -16,12 +16,12 @@ func (a *App) Routes() {
 }
 
 func (a *App) ProductRoutes() {
-	a.Router.HandleFunc("/api/product", auth.VerifyJWT(controllers.GetAllProduct(a.Db))).Methods("GET")
-	a.Router.HandleFunc("/api/product/in-stock", auth.VerifyJWT(controllers.GetAllProductInStock(a.Db))).Methods("GET")
-	a.Router.HandleFunc("/api/product/{id:[0-9]+}", auth.VerifyJWT(controllers.GetProductById(a.Db))).Methods("GET")
-	a.Router.HandleFunc("/api/product", auth.VerifyJWT(controllers.CreateProduct(a.Db))).Methods("POST")
-	a.Router.HandleFunc("/api/product/{id:[0-9]+}", auth.VerifyJWT(controllers.UpdateProduct(a.Db))).Methods("PUT")
-	a.Router.HandleFunc("/api/product/{id:[0-9]+}", auth.VerifyJWT(controllers.DeleteProduct(a.Db))).Methods("DELETE")
+	a.Router.HandleFunc("/api/product", auth.VerifyJWT(controllers.GetAllProduct(a.Db), true)).Methods("GET")
+	a.Router.HandleFunc("/api/product/in-stock", auth.VerifyJWT(controllers.GetAllProductInStock(a.Db), false)).Methods("GET")
+	a.Router.HandleFunc("/api/product/{id:[0-9]+}", auth.VerifyJWT(controllers.GetProductById(a.Db), false)).Methods("GET")
+	a.Router.HandleFunc("/api/product", auth.VerifyJWT(controllers.CreateProduct(a.Db), true)).Methods("POST")
+	a.Router.HandleFunc("/api/product/{id:[0-9]+}", auth.VerifyJWT(controllers.UpdateProduct(a.Db), true)).Methods("PUT")
+	a.Router.HandleFunc("/api/product/{id:[0-9]+}", auth.VerifyJWT(controllers.DeleteProduct(a.Db), true)).Methods("DELETE")
 }
 
 func index() http.HandlerFunc {

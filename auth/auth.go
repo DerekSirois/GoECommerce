@@ -35,7 +35,7 @@ func CreateJWTToken(id int, name string, isAdmin bool) (string, error) {
 	return signedString, nil
 }
 
-func VerifyJWT(endpointHandler func(writer http.ResponseWriter, request *http.Request)) http.HandlerFunc {
+func VerifyJWT(endpointHandler func(writer http.ResponseWriter, request *http.Request), adminOnly bool) http.HandlerFunc {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.Header["Token"] != nil {
 			var jwtToken = request.Header["Token"][0]
@@ -51,32 +51,14 @@ func VerifyJWT(endpointHandler func(writer http.ResponseWriter, request *http.Re
 				utils.Respond(writer, request, &utils.Response{Msg: "Invalid token"}, http.StatusBadRequest)
 				return
 			}
+			if adminOnly && !userClaim.IsAdmin {
+				utils.Respond(writer, request, &utils.Response{Msg: "Admin only"}, http.StatusUnauthorized)
+				return
+			}
 			endpointHandler(writer, request)
 		} else {
 			utils.Respond(writer, request, &utils.Response{Msg: "Missing token"}, http.StatusBadRequest)
 			return
 		}
 	})
-}
-
-func GetClaims(w http.ResponseWriter, r *http.Request) *UserClaim {
-	if r.Header["Token"] != nil {
-		var jwtToken = r.Header["Token"][0]
-		var userClaim UserClaim
-		token, err := jwt.ParseWithClaims(jwtToken, &userClaim, func(token *jwt.Token) (interface{}, error) {
-			return []byte(secretKey), nil
-		})
-		if err != nil {
-			utils.Respond(w, r, &utils.Response{Msg: err.Error()}, http.StatusBadRequest)
-			return nil
-		}
-		if !token.Valid {
-			utils.Respond(w, r, &utils.Response{Msg: "Invalid token"}, http.StatusBadRequest)
-			return nil
-		}
-		return &userClaim
-	} else {
-		utils.Respond(w, r, &utils.Response{Msg: "Missing token"}, http.StatusBadRequest)
-		return nil
-	}
 }
