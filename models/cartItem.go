@@ -14,3 +14,8 @@ func NewCartItem(p uint, q int) *CartItem {
 		Quantity:  q,
 	}
 }
+
+func (c *CartItem) GetById(db *gorm.DB, id uint) error {
+	result := db.First(c, id)
+	return result.Error
+}

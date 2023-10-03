@@ -24,3 +24,8 @@ func (u *User) AddToCart(db *gorm.DB, cartItem *CartItem) error {
 	err := u.UpdateCart(db)
 	return err
 }
+
+func (c *Cart) RemoveFromCart(db *gorm.DB, item *CartItem) error {
+	err := db.Model(c).Association("CartItem").Delete(item)
+	return err
+}
