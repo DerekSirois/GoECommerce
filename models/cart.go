@@ -29,3 +29,25 @@ func (c *Cart) RemoveFromCart(db *gorm.DB, item *CartItem) error {
 	err := db.Model(c).Association("CartItem").Delete(item)
 	return err
 }
+
+func (c *Cart) Checkout(db *gorm.DB) error {
+	for _, element := range c.CartItem {
+		i := &Product{}
+		err := i.GetById(db, element.ProductId)
+		if err != nil {
+			return err
+		}
+
+		i.Quantity -= element.Quantity
+		err = i.Update(db)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (c *Cart) EmptyCart(db *gorm.DB) error {
+	err := db.Model(c).Association("CartItem").Clear()
+	return err
+}
