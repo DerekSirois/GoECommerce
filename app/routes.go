@@ -29,6 +29,7 @@ func (a *App) CartRoutes() {
 	a.Router.HandleFunc("/api/cart/{userId:[0-9]+}", auth.VerifyJWT(controllers.GetUserCart(a.Db), false)).Methods("GET")
 	a.Router.HandleFunc("/api/cart/{userId:[0-9]+}", auth.VerifyJWT(controllers.AddItemToCard(a.Db), false)).Methods("POST")
 	a.Router.HandleFunc("/api/cart/{userId:[0-9]+}/{itemId:[0-9]+}", auth.VerifyJWT(controllers.RemoveFromCart(a.Db), false)).Methods("DELETE")
+	a.Router.HandleFunc("/api/cart/checkout/{id:[0-9]+}", auth.VerifyJWT(controllers.Checkout(a.Db), false)).Methods("POST")
 }
 
 func index() http.HandlerFunc {

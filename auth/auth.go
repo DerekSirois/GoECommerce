@@ -19,7 +19,7 @@ type UserClaim struct {
 
 func CreateJWTToken(id int, name string, isAdmin bool) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, UserClaim{
-		RegisteredClaims: jwt.RegisteredClaims{ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 10))},
+		RegisteredClaims: jwt.RegisteredClaims{ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 10))},
 		ID:               id,
 		UserName:         name,
 		IsAdmin:          isAdmin,

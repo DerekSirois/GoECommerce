@@ -102,3 +102,35 @@ func RemoveFromCart(db *gorm.DB) http.HandlerFunc {
 		utils.Respond(w, r, &utils.Response{Msg: "Item removed successfully"}, http.StatusOK)
 	}
 }
+
+func Checkout(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		userId, err := strconv.ParseUint(vars["id"], 10, 32)
+		if err != nil {
+			utils.Respond(w, r, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		u := models.User{}
+		err = u.GetById(db, uint(userId))
+		if err != nil {
+			utils.Respond(w, r, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		err = u.Cart.Checkout(db)
+		if err != nil {
+			utils.Respond(w, r, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		err = u.Cart.EmptyCart(db)
+		if err != nil {
+			utils.Respond(w, r, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		utils.Respond(w, r, utils.Response{Msg: "checkout successful"}, http.StatusOK)
+	}
+}
